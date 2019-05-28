@@ -4,6 +4,7 @@ service:
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
+  - serverless-dynamodb-local
 
 provider:
   name: aws
@@ -18,3 +19,10 @@ functions:
       - http:
           method: get
           path: second
+
+custom:
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
