@@ -9,21 +9,34 @@ plugins:
 provider:
   name: aws
   runtime: nodejs10.x
-  timeout: 60
   environment:
     DYNAMODB_TABLE: qiitaTable
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - dynamodb:DescribeTable
         - dynamodb:Query
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: arn:aws:dynamodb:us-east-1:*:table/qiitaTable
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:dynamodb:*:*:table/"
+            - Ref: ProductsGqlDynamoDbTable
 
 functions:
+  queryProducts:
+    handler: handler.queryProducts
+    events:
+      - http:
+          path: products
+          method: post
+          cors: true
+    environment:
+      TABLE_NAME: products-gql
   qiita:
     handler: qiita.hello
     environment:
@@ -32,6 +45,19 @@ functions:
 
 resources:
   Resources:
+    ProductsGqlDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: products-gql
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
     qiitaTable:
       Type: AWS::DynamoDB::Table
       Properties:

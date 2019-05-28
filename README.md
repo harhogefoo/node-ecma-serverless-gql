@@ -49,3 +49,43 @@ serverless deploy
 ```
 serverless remove
 ```
+
+# GraphQL sample
+## create
+```
+    mutation {
+      createProduct (name: "Productine", quantity: 2) {
+        id,
+        name,
+        quantity,
+        addedAt
+      }
+    }
+```
+
+## view
+```
+    query {
+      viewProduct (id: "<id>") {
+        name,
+        addedAt
+      }
+    }
+```
+
+## list
+```
+    query {
+      listProducts {
+        name,
+        addedAt
+      }
+    }
+```
+
+## remove
+```
+    mutation {
+      removeProduct (id: "<id>")
+    }
+```
