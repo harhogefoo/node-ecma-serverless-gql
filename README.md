@@ -11,8 +11,15 @@ serverless dynamodb install
 ## prepare
 ```
 serverless dynamodb start
-serverless involke local -f [function name]
 ```
+
+## execute
+```
+serverless invoke local -f [function name]
+
+e.g. serverless invoke local -f qiita
+```
+
 
 ## execute dynamo shell
 on http://localhost:8000
