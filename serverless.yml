@@ -11,14 +11,10 @@ provider:
   runtime: nodejs10.x
 
 functions:
-  first:
-    handler: first.hello
-  second:
-    handler: second.hello
-    events:
-      - http:
-          method: get
-          path: second
+  qiita:
+    handler: qiita.hello
+    environment:
+      endpoint: https://qiita.com/api/v2/users/harhogefoo/items
 
 custom:
   dynamodb:
