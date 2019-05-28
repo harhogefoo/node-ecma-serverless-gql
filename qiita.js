@@ -1,4 +1,19 @@
 import axios from 'axios'
+import AWS from 'aws-sdk'
+
+const documentClient = new AWS.DynamoDB.DocumentClient({
+  // region: 'localhost',
+  // endpoint: 'http://localhost:8000'
+})
+
+const putItem = params => {
+  return new Promise((resolve, reject) => {
+    documentClient.put(params, (err, data) => {
+      if (err) reject(err)
+      else resolve(data)
+    })
+  })
+}
 
 export const hello = async (event, context, callback) => {
   const res = await axios({
@@ -13,22 +28,24 @@ export const hello = async (event, context, callback) => {
   const result = []
   if (res.data) {
     Promise.all(res.data.map(async element => {
-      const record = {
-        id: element.id,
-        title: element.title,
-        url: element.url,
-        likes_count: element.likes_count,
-        created_at: element.created_at,
-        updated_at: element.updated_at,
-        tags: element.tags,
+      const params = {
+        TableName: process.env.tableName,
+        Item: {
+          id: element.id,
+          title: element.title,
+          url: element.url,
+          likes_count: element.likes_count,
+          created_at: element.created_at,
+          updated_at: element.updated_at,
+          tags: element.tags
+        }
       }
-      result.push(record)
+      await putItem(params)
     }))
   }
 
   callback(null, {
-    message: 'qiita article data success',
-    data: result,
+    message: 'write qiita article data to DynamoDB success',
     event
   })
 }

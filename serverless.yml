@@ -9,12 +9,42 @@ plugins:
 provider:
   name: aws
   runtime: nodejs10.x
+  timeout: 60
+  environment:
+    DYNAMODB_TABLE: qiitaTable
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:us-east-1:*:table/qiitaTable
 
 functions:
   qiita:
     handler: qiita.hello
     environment:
       endpoint: https://qiita.com/api/v2/users/harhogefoo/items
+      tableName: ${self:provider.environment.DYNAMODB_TABLE}
+
+resources:
+  Resources:
+    qiitaTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 custom:
   dynamodb:

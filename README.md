@@ -11,7 +11,20 @@ serverless dynamodb install
 ## prepare
 ```
 serverless dynamodb start
-serverless involke local [function name]
+serverless involke local -f [function name]
+```
+
+## execute dynamo shell
+on http://localhost:8000
+
+```
+const params = {
+  TableName: 'qiitaTable',
+}
+dynamodb.scan(params, (err, data) => {
+  if (err) ppJson(err)
+  else ppJson(data)
+})
 ```
 
 ## finish
