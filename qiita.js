@@ -1,14 +1,10 @@
 import axios from 'axios'
-import AWS from 'aws-sdk'
+import { getDynamoClient } from './db'
 
-const documentClient = new AWS.DynamoDB.DocumentClient({
-  // region: 'localhost',
-  // endpoint: 'http://localhost:8000'
-})
 
-const putItem = params => {
+const putItem = (dynamoDb, params) => {
   return new Promise((resolve, reject) => {
-    documentClient.put(params, (err, data) => {
+    dynamoDb.put(params, (err, data) => {
       if (err) reject(err)
       else resolve(data)
     })
@@ -16,6 +12,8 @@ const putItem = params => {
 }
 
 export const hello = async (event, context, callback) => {
+  const dynamoDb = getDynamoClient(event)
+
   const res = await axios({
     method: 'get',
     url: process.env.endpoint,
@@ -25,7 +23,6 @@ export const hello = async (event, context, callback) => {
     }
   })
 
-  const result = []
   if (res.data) {
     Promise.all(res.data.map(async element => {
       const params = {
@@ -40,7 +37,7 @@ export const hello = async (event, context, callback) => {
           tags: element.tags
         }
       }
-      await putItem(params)
+      await putItem(dynamoDb, params)
     }))
   }
 

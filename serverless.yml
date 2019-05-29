@@ -5,6 +5,7 @@ service:
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
+  - serverless-offline
 
 provider:
   name: aws
@@ -78,3 +79,8 @@ custom:
       port: 8000
       inMemory: true
       migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: products-gql

@@ -17,7 +17,8 @@ serverless dynamodb start
 ```
 serverless invoke local -f [function name]
 
-e.g. serverless invoke local -f qiita
+e.g.
+serverless invoke local -f qiita --path event.json
 ```
 
 

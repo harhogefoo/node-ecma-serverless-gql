@@ -1,11 +1,6 @@
-'use strict'
-
-import AWS from 'aws-sdk'
 import uuid from 'uuid'
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient()
-
-export default async data => {
+export default async (dynamoDb, data) => {
   const params = {
     TableName: process.env.TABLE_NAME,
     Item: {

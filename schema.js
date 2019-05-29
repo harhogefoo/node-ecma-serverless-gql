@@ -23,20 +23,20 @@ const productType = new GraphQLObjectType({
   }
 })
 
-const schema = new GraphQLSchema({
+const schema = dynamoDb => new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: {
       listProducts: {
         type: new GraphQLList(productType),
-        resolve: (parent, args) => listProducts()
+        resolve: (parent, args) => listProducts(dynamoDb)
       },
       viewProduct: {
         args: {
           id: { type: new GraphQLNonNull(GraphQLString) }
         },
         type: productType,
-        resolve: (parent, args) => viewProduct(args.id)
+        resolve: (parent, args) => viewProduct(dynamoDb, args.id)
       }
     }
   }),
@@ -50,14 +50,14 @@ const schema = new GraphQLSchema({
           quantity: { type: new GraphQLNonNull(GraphQLInt) }
         },
         type: productType,
-        resolve: (parent, args) => addProduct(args)
+        resolve: (parent, args) => addProduct(dynamoDb, args)
       },
       removeProduct: {
         args: {
           id: { type: new GraphQLNonNull(GraphQLString) }
         },
         type: GraphQLBoolean,
-        resolve: (parent, args) => removeProduct(args.id)
+        resolve: (parent, args) => removeProduct(dynamoDb, args.id)
       }
     }
   })
