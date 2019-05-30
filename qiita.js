@@ -29,6 +29,7 @@ export const hello = async (event, context, callback) => {
         TableName: process.env.tableName,
         Item: {
           id: element.id,
+          user_id: element.user.id,
           title: element.title,
           url: element.url,
           likes_count: element.likes_count,
