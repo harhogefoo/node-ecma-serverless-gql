@@ -5,6 +5,7 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLNull,
   GraphQLBoolean
 } from 'graphql'
 
@@ -17,7 +18,7 @@ const productType = new GraphQLObjectType({
   name: 'Product',
   fields: {
     id: { type: new GraphQLNonNull(GraphQLString) },
-    name: { type: new GraphQLNonNull(GraphQLString) },
+    name: { type: GraphQLString },
     quantity: { type: new GraphQLNonNull(GraphQLInt) },
     addedAt: { type: new GraphQLNonNull(GraphQLString) }
   }
